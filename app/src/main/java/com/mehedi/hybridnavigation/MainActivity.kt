@@ -38,7 +38,6 @@ class MainActivity : AppCompatActivity() {
             fragment<HomeFragment>(NavigationDestination.Home.getRoute())
             fragment<ProductListFragment>(NavigationDestination.ProductList.getRoute())
             fragment<ProductDetailFragment>(NavigationDestination.ProductDetail.getRoute())
-
         }
 
         navController.graph = navGraph
