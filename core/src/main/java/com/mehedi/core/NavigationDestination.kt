@@ -10,19 +10,15 @@ sealed class NavigationDestination(
     private val args: Map<String, NavType<*>> = emptyMap()
 ) {
     // Home (XML)
-    object Home : NavigationDestination("home")
+    data object Home : NavigationDestination("home")
 
 
-    object ProductList : NavigationDestination(
+    data object ProductList : NavigationDestination(
         route = "product_list",
 
-        ) {
-        fun createRoute(productId: String): String {
-            return "product_list"
-        }
-    }
+        )
 
-    object ProductDetail : NavigationDestination(
+    data object ProductDetail : NavigationDestination(
         route = "product_detail",
         args = mapOf(
             "productId" to NavType.StringType
