@@ -1,15 +1,18 @@
 package com.mehedi.hybridnavigation
 
-import NavigationManager
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.createGraph
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.fragment
 import com.mehedi.core.NavigationDestination
+import com.mehedi.core.NavigationManager
 import com.mehedi.product.ProductListFragment
 import com.mehedi.productdetails.ProductDetailFragment
 import kotlinx.coroutines.launch
@@ -28,19 +31,65 @@ class MainActivity : AppCompatActivity() {
 
         setupNavGraph()
         setupNavigation()
+        handleDeepLink(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleDeepLink(intent)
     }
 
     private fun setupNavGraph() {
         val navGraph = navController.createGraph(
             startDestination = NavigationDestination.Home.getRoute()
         ) {
-            // XML-based destinations
-            fragment<HomeFragment>(NavigationDestination.Home.getRoute())
-            fragment<ProductListFragment>(NavigationDestination.ProductList.getRoute())
-            fragment<ProductDetailFragment>(NavigationDestination.ProductDetail.getRoute())
+
+            fragment<HomeFragment>(route = NavigationDestination.Home.getRoute()) {
+                deepLink { uriPattern = "https://yourdomain.com/home" }
+            }
+
+            fragment<ProductListFragment>(route = NavigationDestination.ProductList.getRoute()) {
+                deepLink { uriPattern = "https://yourdomain.com/products" }
+            }
+
+            fragment<ProductDetailFragment>(route = NavigationDestination.ProductDetail.getRoute()) {
+                argument("productId") {
+                    type = NavType.StringType
+                }
+                deepLink {
+                    uriPattern = "https://yourdomain.com/product/{productId}"
+                }
+            }
         }
 
         navController.graph = navGraph
+    }
+
+    private fun handleDeepLink(intent: Intent) {
+        if (intent.action == Intent.ACTION_VIEW) {
+            val uri = intent.data ?: return
+
+            try {
+                when {
+                    uri.pathSegments.firstOrNull() == "product" -> {
+                        val productId = uri.pathSegments.getOrNull(1)
+                        if (productId != null) {
+                            val route = NavigationDestination.ProductDetail.createRoute(productId)
+                            navigationManager.navigateToRoute(route)
+                        }
+                    }
+                    uri.pathSegments.firstOrNull() == "products" -> {
+                        val productId = uri.pathSegments.getOrNull(1)
+                        if (productId != null) {
+                            val route = NavigationDestination.ProductList.createRoute(productId)
+                            navigationManager.navigateToRoute(route)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Deep link navigation failed", e)
+            }
+        }
     }
 
     private fun setupNavigation() {
@@ -58,9 +107,6 @@ class MainActivity : AppCompatActivity() {
                     NavigationManager.NavigationEvent.NavigateBack -> {
                         navController.popBackStack()
                     }
-
-
-                    else -> {}
                 }
             }
         }

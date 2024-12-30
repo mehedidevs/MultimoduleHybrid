@@ -1,6 +1,9 @@
+// NavigationManager.kt
+package com.mehedi.core
+
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mehedi.core.NavigationDestination
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -12,7 +15,7 @@ class NavigationManager : ViewModel() {
     sealed class NavigationEvent {
         data class NavigateTo(val destination: NavigationDestination) : NavigationEvent()
         data class NavigateToRoute(val route: String) : NavigationEvent()
-        data object NavigateBack : NavigationEvent()
+        object NavigateBack : NavigationEvent()
     }
 
     fun navigateTo(destination: NavigationDestination) {

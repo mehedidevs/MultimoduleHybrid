@@ -1,6 +1,6 @@
 package com.mehedi.hybridnavigation
 
-import NavigationManager
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +9,7 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.mehedi.core.NavigationDestination
+import com.mehedi.core.NavigationManager
 
 
 class HomeFragment : Fragment() {

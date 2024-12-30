@@ -20,12 +20,10 @@ class ProductDetailFragment : BaseFragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 MaterialTheme {
-                    val productId = arguments?.getString("title") ?: ""
-                    val productTitle = arguments?.getString("productTitle") ?: ""
-
+                    val productId = arguments?.getString("productId") ?: ""
                     ProductDetailScreen(
                         productId = productId,
-                        productTitle = productTitle,
+                        productTitle = productId,
                         onNavigateBack = {
                             navigationManager.navigateBack()
                         }
