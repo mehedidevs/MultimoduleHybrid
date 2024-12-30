@@ -16,7 +16,7 @@ sealed class NavigationDestination(
    // object ProductDetails : NavigationDestination("product_details")
 
     // Product Detail (Compose)
-    object ProductDetail : NavigationDestination(
+    data object ProductDetail : NavigationDestination(
         route = "product_detail",
         args = mapOf(
             "id" to NavType.StringType,
